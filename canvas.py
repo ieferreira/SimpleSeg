@@ -6,14 +6,11 @@ import classifier as cf
 import numpy as np 
 from skimage import color, io
 
-# # Specify canvas parameters in application
+#  Specify canvas parameters in application
 drawing_mode = st.sidebar.selectbox(
     "Drawing Tool", ("freedraw",)
 )
 
-# drawing_mode = st.sidebar.selectbox(
-#     "Drawing tool:", ("freedraw")
-# )
 
 stroke_width = st.sidebar.slider("Stroke width: ", 1, 25, 3)
 if drawing_mode == 'point':
@@ -50,8 +47,7 @@ if bg_image is not None:
     )
 
     # Do something interesting with the image data and paths
-    # if canvas_result.image_data is not None:
-    #     st.image(canvas_result.image_data)
+
     if canvas_result.json_data is not None:
         objects = pd.json_normalize(canvas_result.json_data["objects"]) # need to convert obj to str because PyArrow
         for col in objects.select_dtypes(include=['object']).columns:
@@ -64,35 +60,23 @@ if bg_image is not None:
 
         # add a dropdown to choose the model
 
-    model_choosen = st.selectbox('Choose a model', ('K-Nearest Neighbors', 'Random Forest Classifier',  'Support Vector Classifier', 'Logistic Regression', 'DecisionTreeClassifier', 'GaussianNB', 'MLPClassifier', 'AdaBoostClassifier', 'GradientBoostingClassifier', 'XGBClassifier', 'LGBMClassifier'))
+    model_choosen = st.selectbox('Choose a model', ('K-Nearest Neighbors',"XGBoost Classifier", 'Random Forest Classifier',  'Support Vector Classifier', 'Logistic Regression', 'Decision Tree Classifier', 'Gaussian Naive Bayes', 'MLP Classifier', 'AdaBoost Classifier', 'GradientBoostingClassifier', 'XGBoost Classifier', 'CatBoost Classifier'))
 
     if st.button('Predict'):
 
 
         dataset = cf.classify(img) 
 
-        model, score = cf.train_model_RF(dataset)
+        model, score = cf.train_model(dataset, model_choosen)
+        #model, score = cf.train_model_RF(dataset)
+
         # model, scores = cf.train_model(dataset)
         predictions_image = cf.predict(model, img)
 
         # display the predictions
         st.write("Predicting...")
-        # write unique values iin the predictions
-        #st.write("Unique values in the predictions: ", predictions_image)
-        # display the predictions 
-        # write a function to convert the predictions_image from integer to a random color
 
-        # def color_map(predictions_image):
-        #     colors = {0: (0,0,0), 1: (255,255,0), 2: (0,255,0), 3: (255,0,0)}
-        #     # create a new array of the same size as the predictions_image
-        #     predictions_image = np.zeros((predictions_image.shape[0], predictions_image.shape[1], 3))
-        #     # loop through the predictions_image and replace the values with the colors
-        #     for i in range(predictions_image.shape[0]):
-        #         for j in range(predictions_image.shape[1]):
-        #             predictions_image[i,j] = colors[predictions_image[i,j]]
-        #     return predictions_image
-        
-        #predictions_image = color_map(predictions_image)
+        st.write("Predictions: ", predictions_image)
         rgb_image = color.label2rgb(predictions_image)
         st.image(img)
         st.write("Model: ", model_choosen, "Score: ", score)

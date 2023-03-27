@@ -10,6 +10,67 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 
+# calculate the accuracy of the predictions
+from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+
+# split the dataset into training and testing sets
+from sklearn.model_selection import train_test_split
+
+# import all the models used here
+"""
+    if model == 'Random Forest Classifier':
+        clf = RandomForestClassifier(n_estimators=100, random_state=42)
+    elif model == 'Logistic Regression':
+        clf = LogisticRegression(random_state=42)
+    elif model == 'Support Vector Classifier':
+        clf = SVC(random_state=42)
+    elif model == 'K-Nearest Neighbors':
+        clf = KNeighborsClassifier(n_neighbors=5)
+    elif model == 'Decision Tree Classifier':
+        clf = DecisionTreeClassifier(random_state=42)
+    elif model == 'Gaussian Naive Bayes':
+        clf = GaussianNB()
+    elif model == 'Linear Discriminant Analysis':
+        clf = LinearDiscriminantAnalysis()
+    elif model == 'Quadratic Discriminant Analysis':
+        clf = QuadraticDiscriminantAnalysis()
+    elif model == 'AdaBoost Classifier':
+        clf = AdaBoostClassifier(random_state=42)
+    elif model == 'Gradient Boosting Classifier':
+        clf = GradientBoostingClassifier(random_state=42)
+    elif model == 'Extra Trees Classifier':
+        clf = ExtraTreesClassifier(random_state=42)
+    elif model == 'Bagging Classifier':
+        clf = BaggingClassifier(random_state=42)
+    elif model == 'MLP Classifier':
+        clf = MLPClassifier(random_state=42)
+    elif model == 'XGBoost Classifier':
+        clf = XGBClassifier(random_state=42)
+    elif model == 'CatBoost Classifier':
+        clf = CatBoostClassifier(random_state=42)
+    elif model == 'LightGBM Classifier':
+        clf = LGBMClassifier(random_state=42)
+    elif model == 'NuSVC':
+        clf = NuSVC(random_state=42)
+
+"""
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
+from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier, ExtraTreesClassifier, BaggingClassifier
+from sklearn.neural_network import MLPClassifier
+from xgboost import XGBClassifier
+from catboost import CatBoostClassifier
+
+
+
 # Define a function to extract x,y coordinate pairs from path commands
 def get_coordinates(path_commands):
     current_point = [0,0]
@@ -73,25 +134,7 @@ def classify(img, path='labels.csv'):
     dataset = coordinates[["pixel_value", "class"]]
     return dataset 
 
-# def train_model(dataset):
 
-
-#     X = dataset["pixel_value"]
-#     y = dataset["class"]
-
-#     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-#     rf = RandomForestClassifier(n_estimators=100, random_state=42)
-#     # reshape the data to fit the model
-#     print("Training...")
-#     rf.fit(X_train.values.reshape(-1, 1), y_train)
-#     #rf.fit(X_train, y_train)
-
-#     y_pred = rf.predict(X_test.values.reshape(-1, 1))
-
-    
-
-#     test_acc = accuracy_score(y_test, y_pred)
-#     return rf, test_acc
 
 def train_model(dataset, model):
     X = dataset["pixel_value"]
@@ -106,6 +149,36 @@ def train_model(dataset, model):
         clf = SVC(random_state=42)
     elif model == 'K-Nearest Neighbors':
         clf = KNeighborsClassifier(n_neighbors=5)
+    elif model == 'Decision Tree Classifier':
+        clf = DecisionTreeClassifier(random_state=42)
+    elif model == 'Gaussian Naive Bayes':
+        clf = GaussianNB()
+    elif model == 'Linear Discriminant Analysis':
+        clf = LinearDiscriminantAnalysis()
+    elif model == 'Quadratic Discriminant Analysis':
+        clf = QuadraticDiscriminantAnalysis()
+    elif model == 'AdaBoost Classifier':
+        clf = AdaBoostClassifier(random_state=42)
+    elif model == 'Gradient Boosting Classifier':
+        clf = GradientBoostingClassifier(random_state=42)
+    elif model == 'Extra Trees Classifier':
+        clf = ExtraTreesClassifier(random_state=42)
+    elif model == 'Bagging Classifier':
+        clf = BaggingClassifier(random_state=42)
+    elif model == 'MLP Classifier':
+        clf = MLPClassifier(random_state=42)
+    elif model == 'XGBoost Classifier':
+        clf = XGBClassifier(random_state=42)
+    elif model == 'CatBoost Classifier':
+        clf = CatBoostClassifier(random_state=42)
+    
+
+    # elif model == 'LightGBM Classifier':
+    #     clf = LGBMClassifier(random_state=42)
+    # elif model == 'NuSVC':
+    #     clf = NuSVC(random_state=42)
+
+
 
     clf.fit(X_train.values.reshape(-1, 1), y_train)
     y_pred = clf.predict(X_test.values.reshape(-1, 1))
@@ -113,43 +186,30 @@ def train_model(dataset, model):
 
     return clf, test_acc
 
-# calculate the accuracy of the predictions
-from sklearn.metrics import accuracy_score
-from sklearn.ensemble import RandomForestClassifier
-
-# split the dataset into training and testing sets
-from sklearn.model_selection import train_test_split
-
-
 def train_model_RF(dataset):
 
 
-    # train a random forest classifier to predict the class (integer) of the pixel values (numpy array)
 
-    # split the dataset into train and test sets
-    train, test = train_test_split(dataset, test_size=0.2, random_state=42)
+    X = dataset["pixel_value"]
+    y = dataset["class"]
 
-    # create a list of the pixel values
-    train_pixel_values = train["pixel_value"].tolist()
-    test_pixel_values = test["pixel_value"].tolist()
-
-    # create a list of the classes
-    train_classes = train["class"].tolist()
-    test_classes = test["class"].tolist()
-
-    # train the random forest classifier
-    rf = RandomForestClassifier(n_estimators=300, random_state=42)
-    rf.fit(train_pixel_values, train_classes)
-
-    # predict the classes of the test set
-    predictions = rf.predict(test_pixel_values)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
-    accuracy = accuracy_score(test_classes, predictions)
-    accuracy
+
+    rf = RandomForestClassifier(n_estimators=100, random_state=42)
+    # reshape the data to fit the model
+    rf.fit(X_train.values.reshape(-1, 1), y_train)
+    #rf.fit(X_train, y_train)
+
+    y_pred = rf.predict(X_test.values.reshape(-1, 1))
+
+    accuracy = accuracy_score(y_test, y_pred)
+
+
     return rf, accuracy
 
-def predict(rf, img):
+def predict(model, img):
     # load the image
     #img = Image.open(img)
 
@@ -166,7 +226,8 @@ def predict(rf, img):
 
     # predict the class of the pixel values
     print("Predicting...")
-    predictions = rf.predict(pixel_values)
+    
+    predictions = model.predict(pixel_values)
     predictions_image = predictions.reshape(img.size[0], img.size[1])
     #mirror the predictions image
     #
@@ -176,19 +237,3 @@ def predict(rf, img):
 
     return predictions_image
 
-# img = Image.open("img.png")
-
-# plt.imshow(img, cmap="gray")
-# predictions_image = predictions.reshape(img.size[1], img.size[0])
-# # use the model to predict the class of the pixel values in the image
-# # get the pixel values from the image
-# pixel_values = []
-# for x in range(img.size[0]):
-#     for y in range(img.size[1]):
-#         pixel_values.append(img.getpixel((x, y)))
-
-# # reshape the pixel values to fit the model
-# pixel_values = np.array(pixel_values).reshape(-1, 1)
-
-# # predict the class of the pixel values
-# predictions = rf.predict(pixel_values)
